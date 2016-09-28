@@ -7,7 +7,7 @@ string[] fastqc(string sample, string readgroup, string infile, string outfile, 
 
 	// initialize
 	string{} swParam = config(softwareConfig)
-	string modname = "ExScaliburGMD::fastqc"
+	string modname = "RNAseq::fastqc"
 	string[] modlist
 	string exe
 	string modsource

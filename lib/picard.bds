@@ -11,7 +11,7 @@ string[] picard(string sample, string util, string refGenome, string tmpdir, str
 	// initialize
 	string{} swParam = config(softwareConfig)
 	string[] modlist
-	string modname = "ExScaliburGMD::picard"
+	string modname = "RNAseq::picard"
 	string picardExe
 	string samtoolsExe
 	string modsource

@@ -11,7 +11,7 @@ string[] checkqc(string sample, string outdir, string logfile, string logdir, st
 	string{} rgParam
 	string[] rgConfigs
 	string[] modlist
-	string modname = "ExScaliburGMD::checkqc"
+	string modname = "RNAseq::checkqc"
 	string exe
 	string path
 	string modsource

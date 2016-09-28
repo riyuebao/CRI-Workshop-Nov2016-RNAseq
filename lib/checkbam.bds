@@ -3,13 +3,12 @@
 include "print.bds"
 include "getmem.bds"
 
-int CheckBAM(string infile, string modsource, string[] modlist, string samtoolsExe) {
+int CheckBAM(string infile, string modsource, string[] modlist, int threads, string sambambaExe) {
 
 	string modload = ""
 	string outfile = infile + ".readTotal"
 	string tid
 	int memory = 1
-	int threads = 1
 	int readTotal = 0
 
 	if(modsource.length() > 0) { modload = ". $modsource; " }
@@ -17,9 +16,9 @@ int CheckBAM(string infile, string modsource, string[] modlist, string samtoolsE
 	memory = getmem(memory * G, threads)
 
 	// note that although I do modload here, the environment setting does not apply to the next sys
-	// you will receive error "samtools command not found!"
+	// you will receive error "sambamba command not found!"
 	// sys $modload
-	// readTotal = sys $samtoolsExe view $infile | wc -l
+	// readTotal = sys $sambambaExe view $infile | wc -l
 
 	// note that we can't not include infile.exists() because it will depend on (outfile <- infile)
 	// two conditions are not mutually exclusive
@@ -28,7 +27,7 @@ int CheckBAM(string infile, string modsource, string[] modlist, string samtoolsE
 		tid = task(outfile <- infile, cpus := threads, mem := memory) {
 			sys echo "checkbam"
 			sys $modload
-			sys $samtoolsExe view $infile | wc -l > $outfile
+			sys $sambambaExe view -t $threads $infile | wc -l > $outfile
 			sys sleep $safeSleep
 		}
 		

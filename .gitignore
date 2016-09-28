@@ -1,2 +1,11 @@
 test*
 example*
+example/reference/*
+myProject*
+*DLBC*
+*.log*
+Run_RNAseq.bds.*
+*.html
+*.chp
+*.js
+*chp

@@ -8,7 +8,7 @@ string[] bedtools(string sample, string util, string refGenome, string targetfil
 	// initialize
 	string{} swParam = config(softwareConfig)
 	string[] modlist
-	string modname = "ExScaliburGMD::bedtools"
+	string modname = "RNAseq::bedtools"
 	string bedtoolsExe
 	string modsource
 	string modload = ""
