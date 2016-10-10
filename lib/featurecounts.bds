@@ -4,10 +4,11 @@
 include "print.bds"
 include "getmem.bds"
 
-string[] featurecounts(string sample, string util, string refGenome, string targetfile, string tmpdir, string infile, string outfile, string outdir, string logfile, string logdir, string softwareConfig) {
+string[] featurecounts(string sample, int paired, string tmpdir, string infile, string outfile, string outdir, string logfile, string logdir, string softwareConfig, string refConfig) {
 
 	// initialize
 	string{} swParam = config(softwareConfig)
+	string{} refParam = config(refConfig)
 	string[] modlist
 	string modname = "RNAseq::featurecounts"
 	string exe
@@ -21,9 +22,19 @@ string[] featurecounts(string sample, string util, string refGenome, string targ
 	string[] infiles = infile.split(",")
 	string inputString
 	string paramString = ''
+	string refGenome
+	string annoGtf
+	string annoFormat = 'GTF'
+	string annoFeature = 'exon'
+	string annoAttribute = 'gene_id'
 	int infileTotal
-	int rmdupFlag
-	// int maxMemPerThread
+	int rnaseqLibStrand = 0
+	int minMapQual = 0
+	int countJunctionFlag = 0
+	int countPrimaryFlag = 0
+	int countProperpairFlag = 0
+	int pairedEndFragmentFlag = 0
+
 
 	// assign values
 	if(swParam.hasKey("main_module_source")) { modsource = swParam{"main_module_source"} }
@@ -31,9 +42,18 @@ string[] featurecounts(string sample, string util, string refGenome, string targ
 	if(swParam.hasKey("featurecounts_module")) { modlist.push(swParam{"featurecounts_module"}) }
 	if(swParam.hasKey("featurecounts_threads")) { threads = swParam{"featurecounts_threads"}.parseInt() }
 	if(swParam.hasKey("featurecounts_mem")) { memory = swParam{"featurecounts_mem"}.parseInt() }
-	if(swParam.hasKey("featurecounts_rmdupFlag")) { rmdupFlag = swParam{"featurecounts_rmdupFlag"}.parseInt() }
+	if(swParam.hasKey("featurecounts_anno_format")) { annoFormat = swParam{"featurecounts_anno_format"} }
+	if(swParam.hasKey("featurecounts_anno_feature")) { annoFeature = swParam{"featurecounts_anno_feature"} }
+	if(swParam.hasKey("featurecounts_anno_attribute")) { annoAttribute = swParam{"featurecounts_anno_attribute"} }
+	if(swParam.hasKey("featurecounts_rnaseq_lib_strand")) { rnaseqLibStrand = swParam{"featurecounts_rnaseq_lib_strand"}.parseInt() }
+	if(swParam.hasKey("featurecounts_min_map_qual")) { minMapQual = swParam{"featurecounts_min_map_qual"}.parseInt() }
+	if(swParam.hasKey("featurecounts_count_junction")) { countJunctionFlag = swParam{"featurecounts_count_junction"}.parseInt() }
+	if(swParam.hasKey("featurecounts_count_primary")) { countPrimaryFlag = swParam{"featurecounts_count_primary"}.parseInt() }
+	if(swParam.hasKey("featurecounts_count_properpair")) { countProperpairFlag = swParam{"featurecounts_count_properpair"}.parseInt() }
+	if(swParam.hasKey("featurecounts_paired_end_fragment")) { pairedEndFragmentFlag = swParam{"featurecounts_paired_end_fragment"}.parseInt() }
 
-	// if(swParam.hasKey("featurecounts_max_mem_per_thread")) { maxMemPerThread = swParam{"featurecounts_max_mem_per_thread"}.parseInt() }
+	if(refParam.hasKey("grch38_genome")) { refGenome = refParam{"grch38_genome"} }
+	if(refParam.hasKey("grch38_anno_gtf")) { annoGtf = refParam{"grch38_anno_gtf"} }
 
 	if(modsource.length() > 0) { modload = ". $modsource; " }
 	for(string mod : modlist) { modload += "module load $mod; " }
@@ -42,7 +62,18 @@ string[] featurecounts(string sample, string util, string refGenome, string targ
 	infileTotal = infiles.size()
 	// maxMemPerThread = memory / threads
 	inputString = infiles.join(' ')
-	if(rmdupFlag == 1) { paramString = ' -r' }
+
+	// prepare params
+	paramString += ' -s ' + rnaseqLibStrand + ' -F ' + annoFormat
+	paramString += ' -t ' + annoFeature + ' -g ' + annoAttribute
+	paramString += ' -Q ' + minMapQual 
+	if(countJunctionFlag == 1) { paramString += ' -J ' }
+	if(countPrimaryFlag == 1) { paramString += ' --primary ' }
+	// PE reads only
+	if(paired == 1) {
+		if(countProperpairFlag == 1) { paramString += ' -B -C' }
+		if(pairedEndFragmentFlag == 1) { paramString += ' -p ' }
+	}
 	
 	// println info(modname, "START | sm=$sample | util=$util | bamTotal=$infileTotal")
 
@@ -51,67 +82,23 @@ string[] featurecounts(string sample, string util, string refGenome, string targ
 	if(! logdir.isDir()) { logdir.mkdir() }	
 	if(! tmpdir.isDir()) { tmpdir.mkdir() }
 
-	// featurecounts markdup works with multiple files
-	if(util == "MarkDuplicates") {
-		if(outfile + ".bai" <- infile) { 
-			println info(modname, " task=run_markdup | run=1")
-			// single or paired-end
-			tid = task(cpus := threads, mem := memory) {
-				sys echo "$sample::featurecounts::$util"
-				sys $modload
-				sys $exe markdup $paramString -t $threads --tmpdir $tmpdir $inputString $outfile 2> $logdir/$logfile
-				sys sleep $safeSleep
-			}
-
-			tids.push(tid)
-		}
-		else {
-			println info(modname, " task=run_markdup | run=0")
-		}
-	}
-	
-	// merge bam files
-	if((infileTotal >= 2) && (util == "MergeSamFiles")) {
-		if(outfile <- infiles) {
-			println info(modname, "task=run_mergeBam | run=1")
-			tid = task(outfile + ".bai" <- infiles, cpus := threads, mem := memory, \
-				inputString != "") {
-				sys echo "$sample::featurecounts::$util"
-				sys $modload
-				sys $exe merge -t $threads $outfile $inputString 2> $logdir/$logfile
-				sys sleep $safeSleep
-			}
-
-			tids.push(tid)
-		}
-		else {
-			println info(modname, "task=run_mergeBam | run=0")
-		}
-	}
-
-
-	if(infileTotal == 1) {
-		if(util == "RetrieveOnTarget") {
-			// truncated bam???
-			if(outfile + ".bai" <- infile) { 
-				println info(modname, " task=run_retrieveBam | run=1")
-				tid = task(cpus := threads, mem := memory) {
-					sys echo "$sample::featurecounts::$util"
-					sys $modload
-					sys $exe view -t $threads -f bam -L $targetfile -o $outfile $infile 2> $logdir/$logfile
-					sys sleep $safeSleep
-				}
-
-				tids.push(tid)
-			}
-			else {
-				println info(modname, " task=run_retrieveBam | run=0")
-			}
-
+	// run featurecounts 
+	if(outfile <- infile) { 
+		println info(modname, " task=run_featurecounts | run=1")
+		tid = task(cpus := threads, mem := memory) {
+			sys echo "$sample::featurecounts"
+			sys $modload
+			sys $exe $paramString -a $annoGtf -T $threads -G $refGenome -o $outfile $infile 2> $logdir/$logfile
+			sys sleep $safeSleep
 		}
 
 		tids.push(tid)
 	}
+	else {
+		println info(modname, " task=run_featurecounts | run=0")
+	}
+
+	tids.push(tid)
 
 	// println info(modname, "END | sm=$sample | util=$util | bamTotal=$infileTotal")
 	
