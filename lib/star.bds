@@ -132,43 +132,51 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 		outfileSE := outdir + "/" + readgroup + ".se.Aligned.sortedByCoord.out.bam"
 		logSE := logfile.swapExt(".log",".se.log")
 
-		// check whether the input file exists but is empty! (e.g. only carries the header ...)
-		readsTotal = CheckBAM(outfileSE, modsource, modlist, threads, sambambaExe)
+		// notice that if you rename the bam file the original output is gone, hence the dependency to run aln will always be [FALSE]
+		// check the dependency of input and renamed bam file instead ...
+		if(outfile <- in1) { 
 
-		// run aln
-		if((outfileSE + ".bai" <- in1) || (readsTotal == 0)) { 
-			println info(modname, "task=run_star_single | sm=$sample | rg=$readgroup | run=1")
+			// check whether the input file exists but is empty! (e.g. only carries the header ...)
+			readsTotal = CheckBAM(outfileSE, modsource, modlist, threads, sambambaExe)
 
-			if (starRunMode == 'alignReads') {
-				tid1 = STARalignReads(readgroup, rgstring, starIndex, outdir, logSE, logdir, starExe, sambambaExe, threads, memory, modload, in1, minMapQ, genomeLoad, readFilesCommand, outSAMstrandField, outFilterIntronMotifs, outSamType, outfileSE, readsTotal)
-				tids.push(tid1)
+			// run aln
+			if((outfileSE + ".bai" <- in1) || (readsTotal == 0)) { 
+				println info(modname, "task=run_star_single | sm=$sample | rg=$readgroup | run=1")
+
+				if (starRunMode == 'alignReads') {
+					tid1 = STARalignReads(readgroup, rgstring, starIndex, outdir, logSE, logdir, starExe, sambambaExe, threads, memory, modload, in1, minMapQ, genomeLoad, readFilesCommand, outSAMstrandField, outFilterIntronMotifs, outSamType, outfileSE, readsTotal)
+					tids.push(tid1)
+				}
 			}
-		}
-		else {
-			println info(modname, " task=run_star_single | rg=$readgroup | run=0")
-		}
+			else {
+				println info(modname, " task=run_star_single | rg=$readgroup | run=0")
+			}
 
-		// wait tids
+			// wait tids
 
-		// rename bam
-		if(outfile <- outfileSE) { 
-			wait tid1
-			println info(modname, "task=rename_bamfile | sm=$sample | rg=$readgroup | run=1")
-			tid3 = task(outfile <- outfileSE, cpus := threads, mem := memory, \
-				outfileSE.exists()) {
-				sys echo "$sample::$readgroup::renameBAM"
-				sys $modload
-				sys echo -e "+++++++++ Rename bam +++++++++ " >> $logdir/$logSE 
-				sys mv $outfileSE $outfile >> $logdir/$logSE 2>&1
-				sys $sambambaExe index $outfile >> $logdir/$logSE 2>&1
-				sys echo -e "+++++++++ Done! +++++++++ " >> $logdir/$logSE 
-				sys sleep $safeSleep
-			}		
+			// rename bam
+			if(outfile <- outfileSE) { 
+				wait tid1
+				println info(modname, "task=rename_bamfile | sm=$sample | rg=$readgroup | run=1")
+				tid3 = task(outfile <- outfileSE, cpus := threads, mem := memory, \
+					outfileSE.exists()) {
+					sys echo "$sample::$readgroup::renameBAM"
+					sys $modload
+					sys echo -e "+++++++++ Rename bam +++++++++ " >> $logdir/$logSE 
+					sys mv $outfileSE $outfile >> $logdir/$logSE 2>&1
+					sys $sambambaExe index $outfile >> $logdir/$logSE 2>&1
+					sys echo -e "+++++++++ Done! +++++++++ " >> $logdir/$logSE 
+					sys sleep $safeSleep
+				}		
 
-			tids.push(tid3)
-		}
-		else {
-			println info(modname, "task=rename_bamfile | sm=$sample | rg=$readgroup | run=0")
+				tids.push(tid3)
+			}
+			else {
+				println info(modname, "task=rename_bamfile | sm=$sample | rg=$readgroup | run=0")
+			}
+
+		} else {
+			println info(modname, " task=run_star_single+rename_bamfile | rg=$readgroup | run=0")
 		}
 	}
 	// paired-end
@@ -289,8 +297,11 @@ string STARalignReads(string readgroup, string rgstring, string starIndex, strin
 		exit 1
 	}
 
+	println in1
+	println outfile + ".bai"
+
 	if(infileTotal == 1) {
-		tid = task(outfile + ".bai" <- [in1,in2], cpus := threads, mem := memory, \
+		tid = task(outfile + ".bai" <- in1, cpus := threads, mem := memory, \
 		in1.length() > 0) {
 			sys echo "$sample::$readgroup::starSE"
 			sys set -o pipefail

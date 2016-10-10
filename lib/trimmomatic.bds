@@ -100,9 +100,9 @@ string[] trimmomatic(string sample, string readgroup, string infile, string outf
 	if(minlen > 0) { paramString += ' MINLEN:' + minlen }
 	if(slidingwindow.length() > 0) { paramString += ' SLIDINGWINDOW:' + slidingwindow }
 
-	println paramString
-	println javaMaxMemStr
-	println exe
+	// println paramString
+	// println javaMaxMemStr
+	// println exe
 
 	// run start
 	if(! outdir.isDir()) { outdir.mkdir() }	
