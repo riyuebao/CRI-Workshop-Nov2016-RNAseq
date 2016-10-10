@@ -172,7 +172,7 @@ string[] picard(string sample, string util, string tmpdir, string infile, string
 			tids.push(tid)
 		}
 		else {
-			println info(modname, "task=run_collectMultiMetrics | run=0")
+			println info(modname, "task=run_collectRnaSeqMetrics | run=0")
 		}
 		
 	}	

@@ -25,6 +25,8 @@ void Run_RNAseqMetrics(string sample, string aligner, string metric, string proj
 	string[] tids
 	string[] tid
 	string[] picardUtils = ["CollectRnaSeqMetrics", "CollectMultipleMetrics"]
+	string[] rseqcUtils = ['clipping_profile', 'infer_experiment']
+	string[] bedtoolsUtils = ['genomecov']
 	string infile
 	string outfile
 	string resultdir
@@ -32,6 +34,7 @@ void Run_RNAseqMetrics(string sample, string aligner, string metric, string proj
 	string logdir
 	string logfile
 	string flagfile
+	string targetfile = ''
 	int paired = 0
 	int forceIn = 0
 
@@ -68,6 +71,30 @@ void Run_RNAseqMetrics(string sample, string aligner, string metric, string proj
 			outfile = infile.replace('/alignment/', '/alignment_metrics/' + metric + '/')
 			logfile = sample + "." + aligner + "." + metric +  '.' + util + ".log"
 			tid = picard(sample, util, outdir + "/tmp", infile, outfile, outdir, logfile, logdir, softwareConfig, refConfig)
+
+			tids += tid
+		}
+		
+	}
+
+	// run rseqc collect metrics
+	if(metric == "rseqc") {
+		for( string util : rseqcUtils ) {
+			outfile = infile.replace('/alignment/', '/alignment_metrics/' + metric + '/')
+			logfile = sample + "." + aligner + "." + metric +  '.' + util + ".log"
+			tid = rseqc(sample, util, outdir + "/tmp", infile, outfile, outdir, logfile, logdir, softwareConfig, refConfig)
+
+			tids += tid
+		}
+		
+	}
+
+	// run bedtools genome coverage (for rnaseq)
+	if(metric == "bedtools") {
+		for( string util : bedtoolsUtils ) {
+			outfile = infile.replace('/alignment/', '/alignment_metrics/' + metric + '/')
+			logfile = sample + "." + aligner + "." + metric +  '.' + util + ".log"
+			tid = bedtools(sample, util, targetfile, infile, outfile, outdir, logfile, logdir, softwareConfig, refConfig)
 
 			tids += tid
 		}

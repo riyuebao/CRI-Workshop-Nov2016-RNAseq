@@ -25,8 +25,10 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 	string outfileBDG
 	string inputString = ""
 	string chromSize
+	string splitParam = ''
 	int infileTotal
 	int maxRecordsInMem
+	int splitFlag
 
 	// assign values
 	if(swParam.hasKey("java_module")) { modlist.push(swParam{"java_module"}) }
@@ -35,6 +37,7 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 	if(swParam.hasKey("bedtools_module")) { modlist.push(swParam{"bedtools_module"}) }
 	if(swParam.hasKey("bedtools_threads")) { threads = swParam{"bedtools_threads"}.parseInt() }
 	if(swParam.hasKey("bedtools_mem")) { memory = swParam{"bedtools_mem"}.parseInt() }
+	if(swParam.hasKey("bedtools_split")) { splitFlag = swParam{"bedtools_split"}.parseInt() }
 	
 	if(swParam.hasKey("ucsc_module")) { modlist.push(swParam{"ucsc_module"}) }
 
@@ -46,6 +49,8 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 
 	infileTotal = infiles.size()
 	if(infileTotal == 2) { (in1, in2) = infiles }
+
+	if(splitFlag == 1) { splitParam = ' -split' }
 	
 	// println info(modname, "START | sm=$sample | util=$util | inTotal=$infileTotal")
 
@@ -101,7 +106,7 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 				infile.length() > 0) {
 				sys echo "$sample::bedtools$util"
 				sys $modload
-				sys $bedtoolsExe $util -abam $infile -b $targetfile -hist | grep "^all" > $outfile 2>> $logdir/$logfile
+				sys $bedtoolsExe $util -abam $infile -b $targetfile -hist | grep "^all" > $outfile 2> $logdir/$logfile
 				sys sleep $safeSleep
 			}
 
@@ -115,6 +120,7 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 
 	// calculate genome cov
 	if((infileTotal == 1) && (util == "genomecov")) {
+		outfile += '.bw'
 		if(outfile <- infile) {
 			println info(modname, "task=run_genomeCov | sm=$sample | run=1")
 			outfileBDG = outfile.replace('.bw', '.bdg')
@@ -123,11 +129,11 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 				infile.length() > 0) {
 				sys echo "$sample::bedtools$util"
 				sys $modload
-				sys echo "Running bedtools to collect genome coverage bedgraph ... " >> $logdir/$logfile
-				sys $bedtoolsExe $util -bga -split -ibam $infile > $outfileBDG 2>> $logdir/$logfile
+				sys echo "Running bedtools to collect genome coverage bedgraph ... " > $logdir/$logfile
+				sys $bedtoolsExe $util -bga $splitParam -ibam $infile > $outfileBDG 2>> $logdir/$logfile
 				sys echo "Converting bedgraph to bigwig ... " >> $logdir/$logfile
 				sys bedGraphToBigWig $outfileBDG $chromSize $outfile >> $logdir/$logfile 2>&1
-				sys "Done!" >> $logdir/$logfile
+				sys echo "Done!" >> $logdir/$logfile
 				sys sleep $safeSleep
 			}
 

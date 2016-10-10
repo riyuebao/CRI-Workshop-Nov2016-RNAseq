@@ -22,7 +22,6 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 	string tid
 	string[] chrs
 	string[] programs
-	string inputString
 	string paramString = ''
 	string refGenome
 	string refGenomeDict
@@ -40,10 +39,12 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 	if(swParam.hasKey("java_module")) { modlist.push(swParam{"java_module"}) }
 	if(swParam.hasKey("main_module_source")) { modsource = swParam{"main_module_source"} }
 	if(swParam.hasKey("rseqc_exe")) { rseqcExe = swParam{"rseqc_exe"} }
-	if(swParam.hasKey("rseqc_module")) { modlist.push(swParam{"rseqc_module"}) }
 	if(swParam.hasKey("rseqc_threads")) { threads = swParam{"rseqc_threads"}.parseInt() }
 	if(swParam.hasKey("rseqc_mem")) { memory = swParam{"rseqc_mem"}.parseInt() }
 	if(swParam.hasKey("rseqc_sample_size")) { memory = swParam{"rseqc_sample_size"}.parseInt() }
+
+	// prepare R environment for plotting 
+	if(swParam.hasKey("R_module")) { modlist.push(swParam{"R_module"}) }
 
 	if(refParam.hasKey("grch38_genome")) { refGenome = refParam{"grch38_genome"} }
 	if(refParam.hasKey("grch38_genomedict")) { refGenomeDict = refParam{"grch38_genomedict"} }
@@ -69,14 +70,14 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 	if(! tmpdir.isDir()) { tmpdir.mkdir() }
 
 	if(util == 'clipping_profile') {
-		if(outfile <- infile) {
+		if(outfile + '.clipping_profile.xls' <- infile) {
 			println info(modname, "task=run_" + util + " | run=1")
-			tid = task(outfile <- infile, \
-				cpus := threads, mem := memory, \
-				inputString != "") {
+
+			tid = task(outfile + '.clipping_profile.xls' <- infile, \
+				cpus := threads, mem := memory) {
 				sys echo "$sample::rseqc::$util"
 				sys $modload
-				sys $util.py -i $infile -o $outfile 2>&1 $logdir/$logfile
+				sys $util.py -i $infile -o $outfile >& $logdir/$logfile 
 				sys sleep $safeSleep
 			}
 
@@ -92,8 +93,7 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 		if(outfile <- infile) {
 			println info(modname, "task=run_" + util + " | run=1")
 			tid = task(outfile <- infile, \
-				cpus := threads, mem := memory, \
-				inputString != "") {
+				cpus := threads, mem := memory) {
 				sys echo "$sample::rseqc::$util"
 				sys $modload
 				sys $util.py -i $infile -r $annoBed12 -s $sampleSize > $outfile 2> $logdir/$logfile
@@ -111,11 +111,10 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 		if(outfile <- infile) {
 			println info(modname, "task=run_" + util + " | run=1")
 			tid = task(outfile <- infile, \
-				cpus := threads, mem := memory, \
-				inputString != "") {
+				cpus := threads, mem := memory) {
 				sys echo "$sample::rseqc::$util"
 				sys $modload
-				sys $util.py -i $infile -r $annoBed12 -o $outfile 2>&1 $logdir/$logfile
+				sys $util.py -i $infile -r $annoBed12 -o $outfile >& $logdir/$logfile
 				sys sleep $safeSleep
 			}
 
@@ -130,11 +129,10 @@ string[] rseqc(string sample, string util, string tmpdir, string infile, string 
 		if(outfile <- infile) {
 			println info(modname, "task=run_" + util + " | run=1")
 			tid = task(outfile <- infile, \
-				cpus := threads, mem := memory, \
-				inputString != "") {
+				cpus := threads, mem := memory) {
 				sys echo "$sample::rseqc::$util"
 				sys $modload
-				sys $util.py -i $infile -o $outfile -r $annoBed12 -c 0.01 2>&1 $logdir/$logfile
+				sys $util.py -i $infile -o $outfile -r $annoBed12 -c 0.01 >& $logdir/$logfile
 				sys sleep $safeSleep
 			}
 
