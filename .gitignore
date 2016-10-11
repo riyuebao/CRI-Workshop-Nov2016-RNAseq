@@ -9,3 +9,6 @@ Run_RNAseq.bds.*
 *.chp
 *.js
 *chp
+doc/input*
+doc/output*
+
