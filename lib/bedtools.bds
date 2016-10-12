@@ -11,6 +11,8 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 	string[] modlist
 	string modname = "RNAseq::bedtools"
 	string bedtoolsExe
+	string ucscExe
+	string bedGraphToBigWigExe = 'bedGraphToBigWig'
 	string modsource
 	string modload = ""
 	string javaMaxMemStr = ""
@@ -39,6 +41,8 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 	if(swParam.hasKey("bedtools_mem")) { memory = swParam{"bedtools_mem"}.parseInt() }
 	if(swParam.hasKey("bedtools_split")) { splitFlag = swParam{"bedtools_split"}.parseInt() }
 	
+	// the ucsc_exe is the path to the tool installation directory (not the tool itself)
+	if(swParam.hasKey("ucsc_exe")) { ucscExe = swParam{"ucsc_exe"} }
 	if(swParam.hasKey("ucsc_module")) { modlist.push(swParam{"ucsc_module"}) }
 
 	if(refParam.hasKey("grch38_chrom_size")) { chromSize = refParam{"grch38_chrom_size"} }
@@ -46,6 +50,10 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 	if(modsource.length() > 0) { modload = ". $modsource; " }
 	for(string mod : modlist) { modload += "module load $mod; " }
 	memory = getmem(memory * G, threads)	
+
+	if(ucscExe.length() > 0) {
+		bedGraphToBigWigExe = ucscExe + '/' + bedGraphToBigWigExe
+	}
 
 	infileTotal = infiles.size()
 	if(infileTotal == 2) { (in1, in2) = infiles }
@@ -132,7 +140,7 @@ string[] bedtools(string sample, string util, string targetfile, string infile, 
 				sys echo "Running bedtools to collect genome coverage bedgraph ... " > $logdir/$logfile
 				sys $bedtoolsExe $util -bga $splitParam -ibam $infile > $outfileBDG 2>> $logdir/$logfile
 				sys echo "Converting bedgraph to bigwig ... " >> $logdir/$logfile
-				sys bedGraphToBigWig $outfileBDG $chromSize $outfile >> $logdir/$logfile 2>&1
+				sys $bedGraphToBigWigExe $outfileBDG $chromSize $outfile >> $logdir/$logfile 2>&1
 				sys echo "Done!" >> $logdir/$logfile
 				sys sleep $safeSleep
 			}

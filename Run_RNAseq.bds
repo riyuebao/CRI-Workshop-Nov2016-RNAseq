@@ -33,6 +33,7 @@ string multiConfig = cfgdir + "/" + project + ".multisample.cfg"
 string chpdir = projdir + "/checkpoints/" + project + "_chp"
 
 // other settings
+// rseqc (python) does NOT work on stats due to lib missing
 string[] metrics = ['picard', 'rseqc', 'bedtools']
 
 // read sample list; remove redundant sample ids
