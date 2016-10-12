@@ -21,7 +21,7 @@ use vars qw($opt_pbs);
 use vars qw($opt_sge);
 use vars qw($opt_log);
 
-our @EXPORT = qw(Get_Opt @aligners @callers $bds_cfg $bds_cfg_proj $command $config_file $config_list $job_script $metadata_file $platform $proj_dir $project $sample_list $scheduler $threads $tree_exe $tree_output $force_flag $log_flag $mapq_min $retry);
+our @EXPORT = qw(Get_Opt @aligners @callers $bds_cfg $bds_cfg_proj $command $config_file $config_list $job_script $metadata_file $platform $proj_dir $project $sample_list $scheduler $threads $tree_exe $tree_output $force_flag $log_flag $mapq_min $retry $pipeline_script);
 our @EXPORT_OK = qw(Get_Opt);
 
 ## ---------------------------------------
@@ -48,6 +48,7 @@ our $force_flag = 0;
 our $log_flag = 0;
 our $mapq_min = 0;
 our $retry = 0;
+our $pipeline_script = 'Run_RNAseq.bds';
 
 sub Get_Opt
 {
@@ -66,6 +67,7 @@ sub Get_Opt
     "y|retry:i" => \$retry,
     "tree:s" => \$tree_exe,
     "bdscfg:s" => \$bds_cfg,
+    "pipeline:s" => \$pipeline_script,
     "force",
     "local",
     "ssh",
@@ -118,7 +120,7 @@ sub Get_Opt
   if($opt_pbs) { $command .= " --pbs"; }
   if($opt_sge) { $command .= " --sge"; } 
   if($log_flag) { $command .= " --log"; }
-  $command .= " --retry $retry --bdscfg $bds_cfg";
+  $command .= " --retry $retry --bdscfg $bds_cfg --pipeline $pipeline_script";
 
   $proj_dir =~ s/\/$//;
   if ( ! -d $proj_dir) { mkdir $proj_dir; }
@@ -138,6 +140,7 @@ sub Print_Cmd
   print "Project Title                     = [ $project ]\n";
   print "Project Directory                 = [ $proj_dir ]\n";
   print "Sample Metadata Table             = [ $metadata_file ]\n";
+  print "Pipeline Master Script            = [ $pipeline_script ]\n";
   print "Pipeline Configuration File       = [ $config_file ]\n";
   print "Number of Threads                 = [ $threads ]\n";
   print "Minumum Mapping Quality           = [ $mapq_min ]\n";

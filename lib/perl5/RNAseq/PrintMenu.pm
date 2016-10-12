@@ -41,6 +41,11 @@ Optional:
                       If specified, project directory structure will be printed to 
                       project.tree.txt.
 Developer: 
+ [--pipeline]       : Pipeline master script. (default: Run_RNAseq.bds)
+                      This is to tell the system which pipeline to run and its 
+                      installation location. Set it to 
+                      pathTo/Run_RNAseq.bds 
+                      if the pipeline installation path is not in the system \$PATH.
  [--local]          : Running on a single computer.
  [--ssh]            : A server farm or a bunch of desktops or servers without a
                       a workload management system.

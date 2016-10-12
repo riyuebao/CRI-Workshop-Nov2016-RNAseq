@@ -54,7 +54,7 @@ sub Build_Project
   # $config_list = Build_Archive_Yaml($sample_list, $config_list, $proj_dir, $project);
 
   Info("Build pipeline submission job script \"$job_script\"");
-  $config_list = Build_Pipeline_Job($sample_list, $config_list, $proj_dir, $project, $platform, $scheduler, $retry, $job_script, $log_flag, $bds_cfg, $bds_cfg_proj);
+  $config_list = Build_Pipeline_Job($sample_list, $config_list, $proj_dir, $project, $platform, $scheduler, $retry, $job_script, $log_flag, $bds_cfg, $bds_cfg_proj, $pipeline_script);
   `chmod u+x $job_script`;
 
   Info("Copy metadata table to project directory");

@@ -25,7 +25,9 @@ void Run_RNAseqMetrics(string sample, string aligner, string metric, string proj
 	string[] tids
 	string[] tid
 	string[] picardUtils = ["CollectRnaSeqMetrics", "CollectMultipleMetrics"]
-	string[] rseqcUtils = ['clipping_profile', 'infer_experiment']
+	// 'clipping_profile' added one mendatory option [-s] to indicate SE or PE. This option does not exist in v2.6 or earlier. bds will die if running with older version.
+	// string[] rseqcUtils = ['clipping_profile', 'infer_experiment']
+	string[] rseqcUtils = ['infer_experiment']
 	string[] bedtoolsUtils = ['genomecov']
 	string infile
 	string outfile

@@ -17,13 +17,13 @@ our @EXPORT_OK = qw(Build_Pipeline_Job);
 
 sub Build_Pipeline_Job
 {
-  my ($sample_list, $config_list, $proj_dir, $project, $platform, $scheduler, $retry, $job_script, $log_flag, $bds_cfg, $bds_cfg_proj) = @_;
+  my ($sample_list, $config_list, $proj_dir, $project, $platform, $scheduler, $retry, $job_script, $log_flag, $bds_cfg, $bds_cfg_proj, $pipeline_script) = @_;
 
   my @samples = sort keys %{$sample_list};
   my @aligners = Add_Values($config_list->{"pipeline"}->{"flags"}, "aligners");
   my @callers = Add_Values($config_list->{"pipeline"}->{"flags"}, "callers");
   my @lines = Set_BDS_env($job_script);
-  my $bds_script = "Run_RNAseq.bds";
+  # my $pipeline_script = "Run_RNAseq.bds";
   my $sm = "";
   my $pl = "";
   my $sd = "";
@@ -54,7 +54,7 @@ sub Build_Pipeline_Job
   }
 
   ## print job sumission file 
-  $job_script = Print_Job($job_script, $bds_cfg_proj, \@aligners, \@callers, \@lines, $report_format, $retry, $log, $pl, $sd, $bds_script, $proj_dir, $project, $sm);
+  $job_script = Print_Job($job_script, $bds_cfg_proj, \@aligners, \@callers, \@lines, $report_format, $retry, $log, $pl, $sd, $pipeline_script, $proj_dir, $project, $sm);
 
   ## print BDS configuration file for this project
   $bds_cfg_proj = Print_BDS_Cfg($bds_cfg, $proj_dir, $bds_cfg_proj);
@@ -64,7 +64,7 @@ sub Build_Pipeline_Job
 
 sub Print_Job
 {
-  my ($job_script, $bds_cfg_proj, $aligners_ref, $callers_ref, $lines_ref, $report_format, $retry, $log, $pl, $sd, $bds_script, $proj_dir, $project, $sm) = @_;
+  my ($job_script, $bds_cfg_proj, $aligners_ref, $callers_ref, $lines_ref, $report_format, $retry, $log, $pl, $sd, $pipeline_script, $proj_dir, $project, $sm) = @_;
 
   open(OUT, ">", $job_script) or die $!;
 
@@ -73,7 +73,7 @@ sub Print_Job
   print OUT "\nnow=\$\(date +\"\%m-\%d-\%Y\_\%H:\%M:\%S\"\)\n";
   print OUT "\n".join("\n", @$lines_ref)."\n";
   print OUT "\n## submit job \n";
-  print OUT "\nbds -c $proj_dir/$bds_cfg_proj $report_format -y $retry $log $pl $sd $bds_script -aligners ".join(" ", @$aligners_ref)." -callers ".join(" ", @$callers_ref)." -projdir $proj_dir -project $project $sm > Run_RNAseq.$project.\$now.log.out 2> Run_RNAseq.$project.\$now.log.err\n";
+  print OUT "\nbds -c $proj_dir/$bds_cfg_proj $report_format -y $retry $log $pl $sd $pipeline_script -aligners ".join(" ", @$aligners_ref)." -callers ".join(" ", @$callers_ref)." -projdir $proj_dir -project $project $sm > Run_RNAseq.$project.\$now.log.out 2> Run_RNAseq.$project.\$now.log.err\n";
 
   close(OUT);
 
