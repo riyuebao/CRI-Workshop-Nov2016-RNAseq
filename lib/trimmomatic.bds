@@ -115,7 +115,7 @@ string[] trimmomatic(string sample, string readgroup, string infile, string outf
 			in1.length() > 0) {
 			sys echo "$sample::$readgroup::trimmomatic"
 			sys set -o pipefail
-			sys module load $mod
+			sys $modload
 			sys java $javaMaxMemStr -jar $exe $mode -threads $threads $paramString 2> $logdir/$logfile
 			sys sleep $safeSleep
 

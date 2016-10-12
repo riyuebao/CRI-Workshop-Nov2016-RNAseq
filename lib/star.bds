@@ -297,8 +297,8 @@ string STARalignReads(string readgroup, string rgstring, string starIndex, strin
 		exit 1
 	}
 
-	println in1
-	println outfile + ".bai"
+	// println in1
+	// println outfile + ".bai"
 
 	if(infileTotal == 1) {
 		tid = task(outfile + ".bai" <- in1, cpus := threads, mem := memory, \
