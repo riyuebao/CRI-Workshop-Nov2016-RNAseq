@@ -1,4 +1,3 @@
-Run_RNAseq.bds
 test*
 example/archive*
 example/data*
@@ -6,11 +5,10 @@ example/reference*
 *myProject*
 *DLBC*
 *.log*
-*Run_RNAseq.bds.*
+*Run_RNAseq.bds*
 *.html
 *.chp
 *.js
 *.chp
 doc/input*
 doc/output*
-
