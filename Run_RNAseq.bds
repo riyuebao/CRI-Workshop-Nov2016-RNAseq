@@ -4,12 +4,12 @@ int safeSleep = 20
 
 //------------- INCLUDE -------------//
 
-include "/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/lib/print.bds"
-include "/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/module/Run_QualityControl.bds"
-include "/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/module/Run_PreProcessing.bds"
-include "/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/module/Run_Alignment.bds"
-include "/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/module/Run_ReadCountSingle.bds"
-include '/group/bioinformatics/Workshops/cri2016/pipeline/CRI-Workshop-Nov2016-RNAseq/module/Run_RNAseqMetrics'
+include "/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/lib/print.bds"
+include "/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/module/Run_QualityControl.bds"
+include "/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/module/Run_PreProcessing.bds"
+include "/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/module/Run_Alignment.bds"
+include "/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/module/Run_ReadCountSingle.bds"
+include '/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/module/Run_RNAseqMetrics'
 // include "module/Run_ReadCountMulti.bds"
 
 //------------- MAIN -------------//
