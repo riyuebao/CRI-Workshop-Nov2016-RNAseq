@@ -16,6 +16,7 @@ string[] trimmomatic(string sample, string readgroup, string infile, string outf
 	string javaMaxMemStr
 	int threads = 1
 	int memory = 1
+	int modFlag = 0
 
 	// println info(modname, "START | sm=$sample | rg=$readgroup")
 
@@ -45,6 +46,7 @@ string[] trimmomatic(string sample, string readgroup, string infile, string outf
 	// assign values
 	if(swParam.hasKey("java_module")) { modlist.push(swParam{"java_module"}) }
 	if(swParam.hasKey("main_module_source")) { modsource = swParam{"main_module_source"} }
+	if(swParam.hasKey("main_use_module")) { modFlag = swParam{"main_use_module"}.parseInt() }
 	if(swParam.hasKey('main_fastq_format')) { fastqFormat = swParam{'main_fastq_format'}.parseInt() }
 	if(swParam.hasKey("trimmomatic_exe")) { exe = swParam{"trimmomatic_exe"} }
 	if(swParam.hasKey("trimmomatic_module")) { mod = swParam{"trimmomatic_module"} }
@@ -57,8 +59,11 @@ string[] trimmomatic(string sample, string readgroup, string infile, string outf
 	if(swParam.hasKey("trimmomatic_trailing")) { trailing = swParam{"trimmomatic_trailing"}.parseInt() }
 	if(swParam.hasKey("trimmomatic_minlen")) { minlen = swParam{"trimmomatic_minlen"}.parseInt() }
 
-	if(modsource.length() > 0) { modload = ". $modsource; " }
-	for(string mod : modlist) { modload += "module load $mod; " }
+	if(modFlag == 1) {
+		if(modsource.length() > 0) { modload = ". $modsource; " }
+		for(string mod : modlist) { modload += "module load $mod; " }
+	} else { modload = '' }
+
 	// memory = getmem(memory * G, threads)
 
 	if(memory > 0) {

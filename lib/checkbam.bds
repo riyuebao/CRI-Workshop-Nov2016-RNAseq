@@ -3,7 +3,7 @@
 include "print.bds"
 include "getmem.bds"
 
-int CheckBAM(string infile, string modsource, string[] modlist, int threads, string sambambaExe) {
+int CheckBAM(string infile, string modsource, string[] modlist, int modFlag, int threads, string sambambaExe) {
 
 	string modload = ""
 	string outfile = infile + ".readTotal"
@@ -11,8 +11,11 @@ int CheckBAM(string infile, string modsource, string[] modlist, int threads, str
 	int memory = 1
 	int readTotal = 0
 
-	if(modsource.length() > 0) { modload = ". $modsource; " }
-	for(string mod : modlist) { modload += "module load $mod; " }
+	if(modFlag == 1) {
+		if(modsource.length() > 0) { modload = ". $modsource; " }
+		for(string mod : modlist) { modload += "module load $mod; " }
+	} else { modload = '' }
+	
 	memory = getmem(memory * G, threads)
 
 	// note that although I do modload here, the environment setting does not apply to the next sys

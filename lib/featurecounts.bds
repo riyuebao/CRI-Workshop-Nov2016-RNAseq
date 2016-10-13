@@ -16,6 +16,7 @@ string[] featurecounts(string sample, int paired, string tmpdir, string infile, 
 	string modload = ""
 	int threads = 1
 	int memory = 1
+	int modFlag = 0
 
 	string[] tids
 	string tid
@@ -38,6 +39,7 @@ string[] featurecounts(string sample, int paired, string tmpdir, string infile, 
 
 	// assign values
 	if(swParam.hasKey("main_module_source")) { modsource = swParam{"main_module_source"} }
+	if(swParam.hasKey("main_use_module")) { modFlag = swParam{"main_use_module"}.parseInt() }
 	if(swParam.hasKey("featurecounts_exe")) { exe = swParam{"featurecounts_exe"} }
 	if(swParam.hasKey("featurecounts_module")) { modlist.push(swParam{"featurecounts_module"}) }
 	if(swParam.hasKey("featurecounts_threads")) { threads = swParam{"featurecounts_threads"}.parseInt() }
@@ -55,8 +57,11 @@ string[] featurecounts(string sample, int paired, string tmpdir, string infile, 
 	if(refParam.hasKey("grch38_genome")) { refGenome = refParam{"grch38_genome"} }
 	if(refParam.hasKey("grch38_anno_gtf")) { annoGtf = refParam{"grch38_anno_gtf"} }
 
-	if(modsource.length() > 0) { modload = ". $modsource; " }
-	for(string mod : modlist) { modload += "module load $mod; " }
+	if(modFlag == 1) {
+		if(modsource.length() > 0) { modload = ". $modsource; " }
+		for(string mod : modlist) { modload += "module load $mod; " }
+	} else { modload = '' }
+	
 	// memory = getmem(memory * G, threads)
 
 	infileTotal = infiles.size()

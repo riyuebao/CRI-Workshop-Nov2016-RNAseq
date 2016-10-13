@@ -21,6 +21,7 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 	string modload = ""
 	int threads = 1
 	int memory = 1
+	int modFlag = 0
 	int fastqFormat = 33
 
 	// println info(modname, "START | sm=$sample | rg=$readgroup")
@@ -61,6 +62,7 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 	// assign values
 	if(swParam.hasKey("java_module")) { modlist.push(swParam{"java_module"}) }
 	if(swParam.hasKey("main_module_source")) { modsource = swParam{"main_module_source"} }
+	if(swParam.hasKey("main_use_module")) { modFlag = swParam{"main_use_module"}.parseInt() }
 	if(swParam.hasKey("main_min_map_qual")) { minMapQ = swParam{"main_min_map_qual"}.parseInt() }
 	if(swParam.hasKey("star_exe")) { starExe = swParam{"star_exe"} }
 	if(swParam.hasKey("star_module")) { modlist.push(swParam{"star_module"}) }
@@ -94,12 +96,11 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 	// as a result, only string before the first ";" is passed down to function...
 
 	// println "modload:"
-	if(modsource.length() > 0) { modload = ". $modsource; " }
-	for(string mod : modlist) { 
-		modload += "module load $mod; "
-		// println "mod = $mod"
-		// println "modload = $modload" 
-	}
+	if(modFlag == 1) {
+		if(modsource.length() > 0) { modload = ". $modsource; " }
+		for(string mod : modlist) { modload += "module load $mod; " }
+	} else { modload = '' }
+
 	memory = getmem(memory * G, threads)
 
 	// println "modlist:"
@@ -137,7 +138,7 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 		if(outfile <- in1) { 
 
 			// check whether the input file exists but is empty! (e.g. only carries the header ...)
-			readsTotal = CheckBAM(outfileSE, modsource, modlist, threads, sambambaExe)
+			readsTotal = CheckBAM(outfileSE, modsource, modlist, modFlag, threads, sambambaExe)
 
 			// run aln
 			if((outfileSE + ".bai" <- in1) || (readsTotal == 0)) { 
@@ -186,7 +187,7 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 		logSE := logfile.swapExt(".log",".se.log")
 		logPE := logfile.swapExt(".log",".pe.log")
 
-		readsTotal = CheckBAM(outfileSE, modsource, modlist, threads, sambambaExe)
+		readsTotal = CheckBAM(outfileSE, modsource, modlist, modFlag, threads, sambambaExe)
 
 		// run PE on in1 and in2
 		if((outfilePE + ".bai" <- [in1,in2]) || (readsTotal == 0)) { 
@@ -205,7 +206,7 @@ string[] star(string sample, string readgroup, string starRunMode, string rgstri
 		// run SE on in3
 		if(infileTotal == 3) { 
 
-			readsTotal = CheckBAM(outfileSE, modsource, modlist, threads, sambambaExe)
+			readsTotal = CheckBAM(outfileSE, modsource, modlist, modFlag, threads, sambambaExe)
 
 			if((outfileSE + ".bai" <- in3) || (readsTotal == 0)){
 				println info(modname, "task=run_star_unpaired | sm=$sample | rg=$readgroup | run=1")

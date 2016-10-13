@@ -1,4 +1,5 @@
 test*
+*archive*
 example/data/*
 example/reference/*
 myProject*
