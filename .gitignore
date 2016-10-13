@@ -5,7 +5,7 @@ example/reference*
 *myProject*
 *DLBC*
 *.log*
-*Run_RNAseq.bds*
+*Run_RNAseq.bds.*
 *.html
 *.chp
 *.js
