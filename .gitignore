@@ -9,6 +9,7 @@ example/reference*
 *.html
 *.chp
 *.js
+*.pdf
 *.chp
 doc/input*
 doc/output*
