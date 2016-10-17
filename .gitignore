@@ -11,5 +11,7 @@ example/reference*
 *.js
 *.pdf
 *.chp
+*.png
+*.xml
 doc/input*
 doc/output*
