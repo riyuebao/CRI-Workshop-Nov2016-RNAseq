@@ -10,8 +10,6 @@ void Run_Alignment(string sample, string aligner, string projdir, string sampleC
 	//include "lib/header.bds"
 	include "../lib/rgmap.bds"
 	include "../lib/star.bds"
-	// include "../lib/bedtools.bds"
-	// include "../lib/rseqc.bds"
 	include "../lib/sambamba.bds"
 
 	//sys source "config/module.rc"
