@@ -1,15 +1,13 @@
-test*
+!test
+test/*
 !test/DLBC.metadata.txt
 !test/DLBC.pipeline.yaml
 !test/Build_RNAseq.DLBC.sh
 !test/Submit_RNAseq.DLBC.sh
-example/archive*
-example/data*
-example/reference*
+example*
 *myProject*
-*DLBC*
+# *DLBC*
 *.log*
-*Run_RNAseq.bds.*
 *.html
 *.chp
 *.js
