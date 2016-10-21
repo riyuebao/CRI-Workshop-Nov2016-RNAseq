@@ -1,8 +1,8 @@
 test*
-!/test/DLBC.metadata.txt
-!/test/DLBC.pipeline.yaml
-!/test/Build_RNAseq.DLBC.sh
-!/test/Submit_RNAseq.DLBC.sh
+!test/DLBC.metadata.txt
+!test/DLBC.pipeline.yaml
+!test/Build_RNAseq.DLBC.sh
+!test/Submit_RNAseq.DLBC.sh
 example/archive*
 example/data*
 example/reference*
