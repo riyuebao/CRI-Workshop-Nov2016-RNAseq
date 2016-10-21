@@ -11,7 +11,7 @@ example/reference*
 *.js
 *.pdf
 *.chp
-*.png
-*.xml
+*.ipynb_checkpoints
 doc/input*
 doc/output*
+!/doc/assets
