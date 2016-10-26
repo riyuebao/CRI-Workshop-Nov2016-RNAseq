@@ -1,9 +1,9 @@
-!test
-test/*
-!test/DLBC.metadata.txt
-!test/DLBC.pipeline.yaml
-!test/Build_RNAseq.DLBC.sh
-!test/Submit_RNAseq.DLBC.sh
+!pipeline/test
+pipeline/test/*
+!pipeline/test/DLBC.metadata.txt
+!pipeline/test/DLBC.pipeline.yaml
+!pipeline/test/Build_RNAseq.DLBC.sh
+!pipeline/test/Submit_RNAseq.DLBC.sh
 example*
 *myProject*
 # *DLBC*
@@ -14,6 +14,6 @@ example*
 *.pdf
 *.chp
 *.ipynb_checkpoints
-doc/input*
-doc/output*
-!/doc/assets
+notebook/input*
+notebook/output*
+!notebook/assets
