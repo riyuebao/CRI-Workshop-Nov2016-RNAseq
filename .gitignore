@@ -16,4 +16,5 @@ example*
 *.ipynb_checkpoints
 !notebook/input
 notebook/output*
+notebook/tmp*
 !notebook/assets
