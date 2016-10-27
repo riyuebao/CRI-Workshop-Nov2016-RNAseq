@@ -142,7 +142,7 @@ pipeline:
     util:
       check_qc_exe: Check_QC.pl
       mem: 8
-      path: /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/util
+      path: /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/util
   references:
     grch38:
       anno_bed: ~
