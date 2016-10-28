@@ -18,3 +18,4 @@ example*
 ipynb_data/output*
 ipynb_data/tmp*
 !ipynb_data/assets
+!ipynb_data/assets/multiqc_report.html
