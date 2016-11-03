@@ -4,6 +4,7 @@
 
 now=$(date +"%m-%d-%Y_%H:%M:%S")
 export PATH=/home/ubuntu/software/tree-1.7.0:$PATH
+export PATH=/home/ubuntu/.bds:$PATH
 
 ## script 
 # BuildRNAseqExe=../Build_RNAseq.pl
