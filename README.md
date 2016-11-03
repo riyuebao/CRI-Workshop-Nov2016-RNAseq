@@ -1,4 +1,4 @@
-# RNAseq Pipelines: Automated and scalable RNAseq analysis in the Cloud
+# BigSataScript RNAseq Pipelines: Automated and scalable RNAseq analysis in the Cloud
 
 The pipelines are designed to automate good-practice RNAseq analysis protocol including QC, read preprocessing, alignment and transcript quantification. Afterwards, DEG detection and GO/pathway enrichment analysis is performed using R & Bioconductor following the [tutorials](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb).
 
