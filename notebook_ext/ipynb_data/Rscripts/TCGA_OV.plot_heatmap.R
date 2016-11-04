@@ -1,3 +1,38 @@
+
+##-- Retrieve sample & gene clusters and add to clinical table
+##-- retrieve the basis matrix and coef matrix 
+expr.sub.nmf.w = basis(expr.sub.nmf)
+expr.sub.nmf.h = coef(expr.sub.nmf)
+
+##-- retrieve gene cluster
+expr.sub.nmf.geneclr = predict(expr.sub.nmf, 'features')
+expr.sub.nmf.geneclr = data.frame(gene = row.names(expr.sub.nmf.w), 
+                                  cluster = expr.sub.nmf.geneclr)
+row.names(expr.sub.nmf.geneclr) = expr.sub.nmf.geneclr$gene
+expr.sub.nmf.geneclr = expr.sub.nmf.geneclr[
+    order(expr.sub.nmf.geneclr$cluster),]
+# print('Gene clusters ... ')
+# print(table(expr.sub.nmf.geneclr$cluster))
+# print(expr.sub.nmf.geneclr[1:3,])
+
+##-- retrieve sample cluster
+expr.sub.nmf.smclr = predict(expr.sub.nmf)
+expr.sub.nmf.smclr = data.frame(sample = colnames(expr.sub.nmf.h), 
+                                cluster = expr.sub.nmf.smclr)
+row.names(expr.sub.nmf.smclr) = expr.sub.nmf.smclr$sample
+expr.sub.nmf.smclr = expr.sub.nmf.smclr[
+    order(expr.sub.nmf.smclr$cluster),]
+# print('Sample clusters ... ')
+# print(table(expr.sub.nmf.smclr$cluster))
+# print(expr.sub.nmf.smclr[1:3,])
+
+##-- add sample cluster to clinical table
+clinical = merge(clinical, expr.sub.nmf.smclr, by = 'sample')
+clinical$cluster = as.numeric(clinical$cluster)
+clinical = clinical[order(clinical$cluster),]
+clinical$cluster = as.character(clinical$cluster)
+
+##-- Plot sample correlation and gene expression heatmaps
 ##-- prepare for plotting heatmaps
 gene.counts = data.frame(table(expr.sub.nmf.geneclr$cluster))
 gene.colors = c(rep('pink',gene.counts[1,2]),
@@ -53,3 +88,6 @@ centered = t(scale(t(expr.sub.srt), scale=F))
 #                     labRow=F,labCol=F,
 #                     xlab='Samples',ylab='Genes',
 #                     main = 'Gene expression heatmap')
+
+##-- directly view pre-generated heatmaps (workshop only)
+display_png(file='notebook_ext/ipynb_data/assets/Figure22.2.png')
