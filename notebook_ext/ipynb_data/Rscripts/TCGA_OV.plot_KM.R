@@ -1,17 +1,17 @@
 ##-- Set up R plot display options in notebook
 options(jupyter.plot_mimetypes = "image/svg+xml") 
-options(repr.plot.width = 6, repr.plot.height = 6)
+options(repr.plot.width = 5, repr.plot.height = 5)
 
 ##-- Plot KM
-plot(surv.fit, mark=4, col=c('red','blue','green'), 
-     lty=1, lwd=1.5,cex=0.8,cex.lab=0.7, cex.axis=0.7, cex.main=0.8,
+plot(surv.fit, mark=4, col=c('#CC0000','#0000CC','#00CC00'), 
+     lty=1, lwd=1.5,cex=0.8,cex.lab=1.5, cex.axis=1.5, cex.main=1,
      main='Kaplan-Meier survival curves for TCGA OV dataset',
      xlab='Months to Death', 
      ylab='Probability of Survival')
-text(40,0.20,  labels=paste0('cluster1 (n=',sample.counts[1,2],')'), 
-     cex=0.6, col='red')
-text(60,0.68, labels=paste0('cluster2 (n=',sample.counts[2,2],')'), 
-     cex=0.6, col='blue')
-text(70,0.08, labels=paste0('cluster3 (n=',sample.counts[3,2],')'), 
-     cex=0.6, col='green')
+text(20,0.40,  labels=paste0('cluster1 \n(n=',sample.counts[1,2],')'), 
+     cex=1.2, col='#CC0000')
+text(80,0.68, labels=paste0('cluster2 (n=',sample.counts[2,2],')'), 
+     cex=1.2, col='#0000CC')
+text(40,0.08, labels=paste0('cluster3 (n=',sample.counts[3,2],')'), 
+     cex=1.2, col='#00CC00')
 
