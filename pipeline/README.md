@@ -132,13 +132,35 @@ now=$(date +"%m-%d-%Y_%H:%M:%S")
 bds -c /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test/myProject/DLBC.bds.cfg  -y 0    ../Run_RNAseq.bds -aligners star -callers featurecounts -projdir /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test/myProject -project DLBC -samples KO01 WT01 > Run_RNAseq.DLBC.$now.log.out 2> Run_RNAseq.DLBC.$now.log.err
 ```
 
+# How to run pipelines on your own computers
+
+The AWS machine has the working environment and tools pre-installed and is ready for analysis. If you want to run the pipelines on your own computational infrastructure (e.g. laptop, workstation, HPC), please follow the three steps as below.
+
+General guidelines (Linux/Unix system)
+* Install prerequisites
+ * `Perl 5`, `Java 1.8`, `BigDataScript 0.99`, `GCC 4.8`, `R 3.3` or above
+ * `bedtools`, `fastqc`, `featurecounts`, `picard`, `pigz`, `rseqc`, `sambamba`, `samtools`, `star`, `trimmomatic`, `UCSCtools` (`bedGraphToBigWig`)
+* Install pipelines
+ `git clone https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq.git`
+* Replace software path in the example popeline YAML config file with the installation path on your computer
+ * In file `pipeline/test/DLBC.pipeline.yaml`, for example:
+```
+ fastqc:
+      exe: /home/ubuntu/software/fastqc-0.11.5/fastqc
+      mem: 4
+      module: ~
+      threads: 4
+```
+ * Replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer.   
+ *A `module` system will be in future development plan to implement, allowing easy management of software versions.*
+
 # Documentation
 
 Please see the [Wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wiki) for full documentation, including installation, pipeline architecture and help menus.
 
 # Communication
 
-Questions and comments? Please post on [Issues](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/issues) or contact Riyue Bao at <rbao AT bsd DOT uchicago DOT edu>.
+Questions and comments? Please post on [Issues](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/issues) or contact Riyue Bao at rbao AT bsd DOT uchicago DOT edu.
 
 # Release
 
