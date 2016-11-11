@@ -18,7 +18,7 @@ Both the lectures and hands-on documentation were developed using [Jupyter](http
 
 We have two datasets for the hands-on practice. For RNAseq analysis, our example data came from a [published paper](https://www.ncbi.nlm.nih.gov/pubmed/25499759) that explores *PRDM11* and lymphomagenesis. We will use the data from the *PRDM11* knockdown and wildtype samples. You are welcome to explore the full dataset on GEO ([GSE56065](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE56065)). For clinical associations, our example data are ~600 primary ovarian patients from The Cancer Genome Atlas (TCGA) on [GDC](https://gdc-portal.nci.nih.gov/)
 
-> Fog et al., 2015, Loss of PRDM11 promotes MYC-driven lymphomagenesis, Blood 125:1272-1281 
+> Fog et al., 2015, Loss of PRDM11 promotes MYC-driven lymphomagenesis, Blood 125:1272-1281     
 > The Cancer Genome Atlas Research Network, 2011, Integrated genomic analyses of ovarian carcinoma, Nature, 474:609–615
 
 ### File description
