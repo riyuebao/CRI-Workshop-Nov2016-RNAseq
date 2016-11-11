@@ -1,149 +1,36 @@
-# BigSataScript RNAseq Pipelines: Automated and scalable RNAseq analysis in the Cloud
+# AMIA 2016 Annual Symposium Workshop (WG13), Mining Large-scale Cancer Genomics Data Using Cloud-based Bioinformatics Approaches   
+## RNAseq data analysis and clinical applications
 
-The pipelines are designed to automate good-practice RNAseq analysis protocol including QC, read preprocessing, alignment and transcript quantification. Afterwards, DEG detection and GO/pathway enrichment analysis is performed using R & Bioconductor following the [tutorials](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb).
+**[Center for Research Informatics](http://cri.uchicago.edu/), University of Chicago**<br>
+November 13, 2016<br>
+8:30am-12:00pm<br>
+**Instructor:** [Riyue Bao, Ph.D.](https://www.linkedin.com/in/riyuebao)<br>
 
-The pipeline is designed to be
+### Overview
 
-* **Automate** *Full analysis pipeline from QC to read counts with submission of one master script*
-* **Scalable** *Manages analysis of tens to hundreds of samples*
-* **Flexible** *Fine control of analysis modules, parameters, and environmental settings*
-* **Robust** *Extensive checkpoints and error detection features*
-* **Reproducible** *Quick restart of analysis and sharing of results*
-* **Real-time** *Easy access and monitor of the pipeline progress*
-* **Transferable** *Runs on a desktop, work station, HPC and cloud with one single switch*
-* **Adaptable** *Easily adopted to various research projects with minimal human intervention*
+In this 3 hour session, participants will learn about the basics of RNAseq technologies & applications, and gain hands-on experience with analyzing real RNAseq and clinical data. All of this will be performed on Amazon's EC2 cloud environment.
 
-The pipeline is implemented in 
+### Format
 
-* [BigDataScript](http://pcingola.github.io/BigDataScript/) *Scripting language for data pipelines*
-* [Perl](https://www.perl.org/) *Utilities*
+Both the lectures and hands-on documentation were developed using [Jupyter](http://jupyter.org/) notebooks. The first section will provide you with a basic understanding of RNAseq experiments, clinical applications and experimental design suggestions. The second section will introduce you to the basic workflow of RNAseq data analysis utilizing automated pipelines. After these lectures we will move on to our hands-on activity which uses a Jupyter notebook with [R](https://irkernel.github.io/) to identify differentially expressed genes and pathways. In the last section, we will practice how to associate gene expression with patient's survival in ovarian cancer.
 
-# Quick Demo
+### Dataset
 
-### Quick Start
+We have two datasets for the hands-on practice. For RNAseq analysis, our example data came from a [published paper](https://www.ncbi.nlm.nih.gov/pubmed/25499759) that explores *PRDM11* and lymphomagenesis. We will use the data from the *PRDM11* knockdown and wildtype samples. You are welcome to explore the full dataset on GEO ([GSE56065](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE56065)). For clinical associations, our example data are ~600 primary ovarian patients from The Cancer Genome Atlas (TCGA) on [GDC](https://gdc-portal.nci.nih.gov/)
 
-To test the pipeline, log into the AWS EC2 machine assigned to you. 
-Go to directory `/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test` and run 
- 
-```
-#!bash
-./Build_RNAseq.DLBC.sh
-```
+> Fog et al., 2015, Loss of PRDM11 promotes MYC-driven lymphomagenesis, Blood 125:1272-1281 
+> The Cancer Genome Atlas Research Network, 2011, Integrated genomic analyses of ovarian carcinoma, Nature, 474:609–615
 
-The test run takes about 4 minutes. An output directory `myProject` will be generated in the current directory. 
+### File description
 
-### Description
+This repository contains the following items:
+* `Run_RNAseq.tutorial.ipynb` - the main notebook for lecture and hands-on
+* `Run_RNAseq.tutorial.rendered.ipynb` - same as above, but with all outputs & figures already rendered for browsing
+* `notebook_ext/` - this directory contains the extended version of contents covered in the main notebook
+* `pipeline/` - automated pipelines for RNAseq analysis
 
-To gain the first look into the pipelines, we provide sample data and scripts to build a small project with two conditions (KO vs WT), six samples.
+We will use `Run_RNAseq.tutorial.ipynb` for the workshop. If something goes wrong, the `Run_RNAseq.tutorial.rendered.ipynb` notebook can be used for visualization of the output. In addition, the extended notebooks in `notebook_ext` directory contains more information that you can browse on your own time. Lastly, the `pipeline` was designed to automate analysis from FastQ to read counts, with a quick-start tutorial and wiki documentation.
 
-| Sample | Group | Sequencing File | Sequencing Data |
-|------|------|------|------|------|   
-| KO01 | KO | KO01.fastq.gz | 74,126,025 reads |   
-| KO02 | KO | KO02.fastq.gz | 64,695,948 reads |   
-| KO03 | KO | KO03.fastq.gz | 52,972,573 reads |   
-| WT01 | WT | WT01.fastq.gz | 55,005,729 reads |   
-| WT01 | WT | WT02.fastq.gz | 61,079,377 reads |   
-| WT01 | WT | WT03.fastq.gz | 66,517,156 reads | 
+### License
 
-**To run the pipelines for your own projects, only two input files are required**. We have prepared examples of such files in directory `pipeline/test/`
-
-* **DLBC.metadata.txt** *Sample metadata table*
-* **DLBC.pipeline.yaml** *Pipeline configuration file*
-
-Examples of output directories and files are provided in `pipeline/test/archive/KO01_WT01/`. 
-
-This is a quick demo of the testing of a project. To run real analysis, please follow the instructions on [wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wiki).
-
-### Build_RNAseq.DLBC.sh
-
-This build script builds your project file structure, config files, the submission script, and launch the pipeline.
-
-```
-#!bash
-now=$(date +"%m-%d-%Y_%H:%M:%S")
-export PATH=/home/ubuntu/software/tree-1.7.0:$PATH
-export PATH=/home/ubuntu/.bds:$PATH
-
-## script
-# BuildRNAseqExe=../Build_RNAseq.pl
-BuildRNAseqExe=../Build_RNAseq.pl
-SubmitRNAseqExe=Submit_RNAseq.DLBC.sh
-RunRNAseqExe=../Run_RNAseq.bds
-
-## project info
-project=DLBC
-metadata=DLBC.metadata.txt
-config=DLBC.pipeline.yaml
-projdir=$PWD/myProject
-
-## options
-threads=2
-mapq=0
-force="--force"
-tree="--tree tree"
-
-## bds
-platform="--local"
-scheduler=""
-bdscfg=""
-retry=0
-# log="--log" ## Log all tasks (do not delete tmp files).
-log=''
-
-echo "START" `date`
-
-## build pipeline scripts
-echo "START" `date` " Running $BuildRNAseqExe "
-perl $BuildRNAseqExe \
-        --project $project \
-        --metadata $metadata \
-        --config $config \
-        --projdir $projdir \
-        --threads $threads \
-        --mapq $mapq \
-        --retry $retry \
-        --pipeline $RunRNAseqExe \
-        $force \
-        $tree \
-        $platform \
-        $scheduler \
-        $bdscfg \
-        $log \
-        >& Build_RNAseq.$project.$now.log
-
-## submit pipeline master script
-echo "START" `date` " Running $SubmitRNAseqExe "
-sh $SubmitRNAseqExe
-
-echo "END" `date`
-```
-
-### Submit_RNAseq.DLBC.sh
-
-This submission script that was generated by `Build_RNAseq.DLBC.sh`, it calls the master BDS script `Run_RNAseq.bds` to launch the pipeline. This script can be submitted separately, or as part of the build script `Build_RNAseq.DLBC.sh` (default).
-
-```
-#!bash
-
-## set up environment
-now=$(date +"%m-%d-%Y_%H:%M:%S")
-
-## submit BDS job (launch the pipeline)
-bds -c /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test/myProject/DLBC.bds.cfg  -y 0    ../Run_RNAseq.bds -aligners star -callers featurecounts -projdir /home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test/myProject -project DLBC -samples KO01 WT01 > Run_RNAseq.DLBC.$now.log.out 2> Run_RNAseq.DLBC.$now.log.err
-```
-
-# Documentation
-
-Please see the [Wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wiki) for full documentation, including installation, pipeline architecture and help menus.
-
-# Communication
-
-Questions and comments? Please post on [Issues](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/issues) or contact Riyue Bao at <rbao AT bsd DOT uchicago DOT edu>.
-
-# Release
-
-* **Version 0.5.0** *2016-11-02*
-
-# More
-
-* [RNAseq Workshop on AWS EC2](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb) *Full introduction and hands-on practice of RNAseq analysis*
+These materials are licensed via [LGPLv3](https://www.gnu.org/licenses/lgpl-3.0.en.html) with a copy available in this repository.
