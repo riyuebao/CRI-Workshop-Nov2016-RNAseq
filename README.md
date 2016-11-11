@@ -31,6 +31,10 @@ This repository contains the following items:
 
 We will use `Run_RNAseq.tutorial.ipynb` for the workshop. If something goes wrong, the `Run_RNAseq.tutorial.rendered.ipynb` notebook can be used for visualization of the output. In addition, the extended notebooks in `notebook_ext` directory contains more information that you can browse on your own time. Lastly, the `pipeline` was designed to automate analysis from FastQ to read counts, with a quick-start tutorial and wiki documentation.
 
+### Useful link
+
+* [CRI-Workshop-AMIA-2016-ChIPseq](https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-ChIPseq)
+
 ### License
 
 These materials are licensed via [LGPLv3](https://www.gnu.org/licenses/lgpl-3.0.en.html) with a copy available in this repository.
