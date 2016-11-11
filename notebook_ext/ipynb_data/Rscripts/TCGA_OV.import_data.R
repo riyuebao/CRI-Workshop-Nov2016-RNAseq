@@ -22,9 +22,9 @@ expr = read.delim(paste0(in.dir,'/',expr.file),
                        header = T, stringsAsFactors = F)
 clinical = read.delim(paste0(in.dir,'/',clinical.file), 
                            header = T, stringsAsFactors = F)
-
-print(paste0('Patients with clincial = ', nrow(clinical)-1))
-print(paste0('Patients with expression = ', ncol(expr)-1))
+clinical = na.omit(clinical)
+print(paste0('Patients with complete clinical = ', nrow(clinical)-1))
+print(paste0('Patients with gene expression = ', ncol(expr)-1))
 print(paste0('Overlap = ', length(intersect(clinical$sample, 
                                       colnames(expr)))))
 print(separator)

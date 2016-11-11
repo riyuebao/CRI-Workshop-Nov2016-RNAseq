@@ -11,6 +11,9 @@ expr.sub.nmf.geneclr = data.frame(gene = row.names(expr.sub.nmf.w),
 row.names(expr.sub.nmf.geneclr) = expr.sub.nmf.geneclr$gene
 expr.sub.nmf.geneclr = expr.sub.nmf.geneclr[
     order(expr.sub.nmf.geneclr$cluster),]
+write.table(expr.sub.nmf.geneclr,
+  file = paste0(out.dir,'/',expr.file,'.gene_clr.txt'),
+  col.names = T, row.names = F, sep = '\t', quote = F)
 # print('Gene clusters ... ')
 # print(table(expr.sub.nmf.geneclr$cluster))
 # print(expr.sub.nmf.geneclr[1:3,])
@@ -22,6 +25,9 @@ expr.sub.nmf.smclr = data.frame(sample = colnames(expr.sub.nmf.h),
 row.names(expr.sub.nmf.smclr) = expr.sub.nmf.smclr$sample
 expr.sub.nmf.smclr = expr.sub.nmf.smclr[
     order(expr.sub.nmf.smclr$cluster),]
+write.table(clinical,
+  file = paste0(out.dir,'/',clinical.file,'.sm_clr.txt'),
+  col.names = T, row.names = F, sep = '\t', quote = F)
 # print('Sample clusters ... ')
 # print(table(expr.sub.nmf.smclr$cluster))
 # print(expr.sub.nmf.smclr[1:3,])
@@ -57,6 +63,7 @@ my.breaks = sort(unique(c(seq(-1, -0.5, length.out=20),
                           seq(0.5, 1, length.out=20))))
 centered = t(scale(t(expr.sub.cor), scale=F))
 ##-- skip in workshop!!
+# png(file=paste0(out.dir,'/',expr.file,'.nmf.cor_heatmap.png'), width=800, height=800)
 # heatmap = heatmap.2(centered, 
 #                     dendrogram='none', 
 #                     Rowv=NULL,
@@ -70,11 +77,13 @@ centered = t(scale(t(expr.sub.cor), scale=F))
 #                     labRow=F,labCol=F,
 #                     xlab='Samples',ylab='Samples',
 #                     main = 'Sample correlation heatmap')
+# dev.off()
 
 ##-- plot gene expression heatmap
 my.heatcol = bluered(177) 
 centered = t(scale(t(expr.sub.srt), scale=F)) 
 ##-- skip in workshop!!
+# png(file=paste0(out.dir,'/',expr.file,'.nmf.gene_heatmap.png'), width=800, height=800)
 # heatmap = heatmap.2(centered, 
 #                     dendrogram='none', 
 #                     Rowv=NULL,
@@ -88,6 +97,7 @@ centered = t(scale(t(expr.sub.srt), scale=F))
 #                     labRow=F,labCol=F,
 #                     xlab='Samples',ylab='Genes',
 #                     main = 'Gene expression heatmap')
+# dev.off()
 
 ##-- directly view pre-generated heatmaps (workshop only)
 display_png(file='notebook_ext/ipynb_data/assets/Figure22.2.png')
