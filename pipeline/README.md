@@ -143,7 +143,7 @@ General guidelines (Linux/Unix system)
 * Install pipelines
  `git clone https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq.git`
 * Replace software path in the example popeline YAML config file `pipeline/test/DLBC.pipeline.yaml` with the installation path on your computer
- * For example: 
+ * e.g. in the `fastqc` block, replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer     
 ```
  fastqc:
       exe: /home/ubuntu/software/fastqc-0.11.5/fastqc
@@ -151,8 +151,7 @@ General guidelines (Linux/Unix system)
       module: ~
       threads: 4
 ```
- * Replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer    
- *A `module` system will be in future development plan to implement, allowing easy management of software versions.*
+  *A `module` system will be in future development plan to implement, allowing easy management of software versions.*
 
 # Documentation
 
