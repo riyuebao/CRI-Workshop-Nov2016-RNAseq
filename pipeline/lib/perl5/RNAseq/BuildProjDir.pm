@@ -27,7 +27,7 @@ sub Build_Proj_Dir
   }
 
   foreach my $dir (qw(logs results)) {
-    Make_Dir("$proj_dir/$dir/$project\_multisample");
+    # Make_Dir("$proj_dir/$dir/$project\_multisample");
   }
 
   # foreach my $dir (qw(aln annovar fastqc)) {
