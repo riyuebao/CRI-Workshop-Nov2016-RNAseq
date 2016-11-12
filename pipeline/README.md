@@ -142,8 +142,8 @@ General guidelines (Linux/Unix system)
  * `bedtools`, `fastqc`, `featurecounts`, `picard`, `pigz`, `rseqc`, `sambamba`, `samtools`, `star`, `trimmomatic`, `UCSCtools` (`bedGraphToBigWig`)
 * Install pipelines
  `git clone https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq.git`
-* Replace software path in the example popeline YAML config file with the installation path on your computer
- * In file `pipeline/test/DLBC.pipeline.yaml`, for example:
+* Replace software path in the example popeline YAML config file `pipeline/test/DLBC.pipeline.yaml` with the installation path on your computer
+ * For example: 
 ```
  fastqc:
       exe: /home/ubuntu/software/fastqc-0.11.5/fastqc
@@ -151,7 +151,7 @@ General guidelines (Linux/Unix system)
       module: ~
       threads: 4
 ```
- * Replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer.   
+ * Replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer    
  *A `module` system will be in future development plan to implement, allowing easy management of software versions.*
 
 # Documentation
@@ -162,10 +162,6 @@ Please see the [Wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wi
 
 Questions and comments? Please post on [Issues](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/issues) or contact Riyue Bao at rbao AT bsd DOT uchicago DOT edu.
 
-# Release
-
-* **Version 0.5.0** *2016-11-02*
-
 # More
 
-* [RNAseq Workshop on AWS EC2](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb) *Full introduction and hands-on practice of RNAseq analysis*
+* [RNAseq Workshop on AWS EC2](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb) *Full introduction and hands-on practice of RNAseq analysis & clinical applications*
