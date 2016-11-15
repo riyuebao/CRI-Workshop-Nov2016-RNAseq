@@ -1,6 +1,6 @@
 # BigSataScript RNAseq Pipelines: Automated and scalable RNAseq analysis in the Cloud
 
-The pipelines are designed to automate good-practice RNAseq analysis protocol including QC, read preprocessing, alignment and transcript quantification. Afterwards, DEG detection and GO/pathway enrichment analysis is performed using R & Bioconductor following the [tutorials](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb).
+The pipelines are designed to automate good-practice RNAseq analysis protocol including QC, read preprocessing, alignment and transcript quantification. Afterwards, DEG detection and GO/pathway enrichment analysis is performed using R & Bioconductor following the [tutorials](https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-RNAseq/blob/master/Run_RNAseq.tutorial.rendered.ipynb).
 
 ![GitHub Logo](https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-RNAseq/blob/master/notebook_ext/ipynb_data/assets/Figure29.png)
 *DEG analysis will be performed using R & Bioconductor packages. It is not included in the automated pipeline.*
@@ -26,14 +26,33 @@ The pipeline is implemented in
 ### Quick Start
 
 To test the pipeline, log into the AWS EC2 machine assigned to you. 
-Go to directory `/home/ubuntu/dev/rnaseq/CRI-Workshop-Nov2016-RNAseq/pipeline/test` and run 
+Go to directory `/home/ubuntu/CRI-Workshop-AMIA-2016-RNAseq/pipeline/test` and run 
  
 ```
 #!bash
 ./Build_RNAseq.DLBC.sh
 ```
 
-The test run takes about 4 minutes. An output directory `myProject` will be generated in the current directory. 
+The test run takes about 4 minutes. An output directory `myProject` will be generated in the current directory. Result files will contain QC reports, preprocessed reads, alignment BAMs, alignment metrics and read count quantification of gene expression.
+
+```
+myProject/
+├── configs
+├── logs
+└── results
+    └── DLBC_samples
+        ├── KO01
+        │   ├── alignment
+        │   ├── alignment_metrics
+        │   ├── clean_reads
+        │   ├── qc_reports
+        │   └── read_counts
+        ├── KO02
+        ├── KO03
+        ├── WT01
+        ├── WT02
+        └── WT03
+```
 
 ### Description
 
@@ -55,7 +74,7 @@ To gain the first look into the pipelines, we provide sample data and scripts to
 
 Examples of output directories and files are provided in `pipeline/test/archive/KO01_WT01/`. 
 
-This is a quick demo of the testing of a project. To run real analysis, please follow the instructions on [wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wiki).
+This is a quick demo of the testing of a project. To run real analysis, please follow the instructions on [wiki](https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-RNAseq/wiki).
 
 ### Build_RNAseq.DLBC.sh
 
@@ -144,7 +163,7 @@ General guidelines (Linux/Unix system)
  * `Perl 5`, `Java 1.8`, `BigDataScript 0.99`, `GCC 4.8`, `R 3.3` or above
  * `bedtools`, `fastqc`, `featurecounts`, `picard`, `pigz`, `rseqc`, `sambamba`, `samtools`, `star`, `trimmomatic`, `UCSCtools` (`bedGraphToBigWig`)
 * Install pipelines
- `git clone https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq.git`
+ `git clone https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-RNAseq.git`
 * Replace software path in the example popeline YAML config file `pipeline/test/DLBC.pipeline.yaml` with the installation path on your computer
  * e.g. in the `fastqc` block, replace `/home/ubuntu/software/fastqc-0.11.5/fastqc` with the path to `fastqc` executable on your computer     
 ```
@@ -162,7 +181,7 @@ Please see the [Wiki](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/wi
 
 # Communication
 
-Questions and comments? Please post on [Issues](https://github.com/riyuebao/CRI-Workshop-Nov2016-RNAseq/issues) or contact Riyue Bao at rbao AT bsd DOT uchicago DOT edu.
+Questions and comments? Please post on [Issues](https://github.com/cribioinfo/CRI-Workshop-AMIA-2016-RNAseq/issues) or contact Riyue Bao at rbao AT bsd DOT uchicago DOT edu.
 
 # More
 
